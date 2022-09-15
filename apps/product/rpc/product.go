@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/fans1992/lebron/apps/order/rpc/internal/config"
-	"github.com/fans1992/lebron/apps/order/rpc/internal/server"
-	"github.com/fans1992/lebron/apps/order/rpc/internal/svc"
-	"github.com/fans1992/lebron/apps/order/rpc/rpc"
+	"github.com/fans1992/lebron/apps/product/rpc/internal/config"
+	"github.com/fans1992/lebron/apps/product/rpc/internal/server"
+	"github.com/fans1992/lebron/apps/product/rpc/internal/svc"
+	"github.com/fans1992/lebron/apps/product/rpc/product"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/rpc.yaml", "the config file")
+var configFile = flag.String("f", "etc/product.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -24,10 +24,10 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-	svr := server.NewRpcServer(ctx)
+	svr := server.NewProductServer(ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		rpc.RegisterRpcServer(grpcServer, svr)
+		product.RegisterProductServer(grpcServer, svr)
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
